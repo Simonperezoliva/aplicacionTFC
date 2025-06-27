@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
 import android.widget.Button
 import android.widget.Toast
 import androidx.camera.core.Preview
@@ -81,12 +82,12 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    companion object {
+    companion object { //listado de permisos en la app
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
     private fun escanearLibros() {
-        // Capturá un frame de PreviewView como Bitmap
+        // Se obtiene un frame de PreviewView como un bitmap
         val previewView = findViewById<PreviewView>(R.id.camera_preview)
         previewView.bitmap?.let { bitmap ->
             val boxes = detector.detectarLibros(bitmap)
