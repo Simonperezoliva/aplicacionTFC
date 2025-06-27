@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var detector: detectorDeLibros
+    private lateinit var previewView: PreviewView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnDetectar).setOnClickListener {
             escanearLibros()
         }
-        // Verificamos permisos
+        // permisos de camara
         if (allPermissionsGranted()) {
             startCamera()
         } else {
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnDetectar).setOnClickListener {
             Toast.makeText(this, "Botón presionado", Toast.LENGTH_SHORT).show()
-            // Aquí luego llamaremos a la clase detectorDeLibros
+            // Llamado a detectorDeLibros
         }
     }
 
