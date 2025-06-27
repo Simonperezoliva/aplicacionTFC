@@ -21,14 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         detector = detectorDeLibros(this)
-
-        startCamera()
-        findViewById<Button>(R.id.btnDetectar).setOnClickListener {
-            escanearLibros()
-        }
         // permisos de camara
-        if (allPermissionsGranted()) {
-            startCamera()
+        if (permisosOtorgados()) {
+            iniciarCamara()
+            findViewById<Button>(R.id.btnDetectar).setOnClickListener {
+                escanearLibros()
+            }
         } else {
             requestPermissions.launch(REQUIRED_PERMISSIONS)
         }
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startCamera() {
+    private fun iniciarCamara() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
@@ -66,16 +64,21 @@ class MainActivity : AppCompatActivity() {
     // Permisos de cámara
     private val requestPermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (allPermissionsGranted()) {
-            startCamera()
+    ) { permisos ->
+        if (permisosOtorgados()) {
+            iniciarCamara()
         } else {
             Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    private fun permisosOtorgados(): Boolean {
+        for (permiso in REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permiso) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
     }
 
     companion object {
