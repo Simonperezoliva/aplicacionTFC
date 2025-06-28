@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.myapplication"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.myapplication"
@@ -35,7 +35,8 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
-        compose = true
+        compose = false
+        viewBinding = true
     }
 }
 
@@ -58,12 +59,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation ("org.tensorflow:tensorflow-lite:2.16.1")
-    implementation ("org.tensorflow:tensorflow-lite-support:0.4.4")
-    implementation ("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
-    implementation (libs.opencv)
-    implementation ("androidx.camera:camera-core:1.4.2")
-    implementation ("androidx.camera:camera-camera2:1.4.2")
-    implementation ("androidx.camera:camera-lifecycle:1.4.2")
-    implementation ("androidx.camera:camera-view:1.4.2")
+    implementation(libs.opencv)
+    implementation ("org.tensorflow:tensorflow-lite:2.13.0")
+    implementation ("org.tensorflow:tensorflow-lite-support:0.4.3")
+    implementation ("org.tensorflow:tensorflow-lite-task-vision:0.4.3")
+    implementation ("androidx.camera:camera-core:1.1.0")
+    implementation ("androidx.camera:camera-camera2:1.1.0")
+    implementation ("androidx.camera:camera-lifecycle:1.1.0")
+    implementation ("androidx.camera:camera-view:1.0.0-alpha32")
 }
