@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         detector = detectorDeLibros(this)
+        previewView = findViewById(R.id.camera_preview)
         // permisos de camara
         if (permisosOtorgados()) {
             iniciarCamara()
