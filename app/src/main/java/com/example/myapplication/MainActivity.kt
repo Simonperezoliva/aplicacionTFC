@@ -23,19 +23,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         detector = detectorDeLibros(this)
         previewView = findViewById(R.id.camera_preview)
-        // permisos de camara
         if (permisosOtorgados()) {
             iniciarCamara()
             findViewById<Button>(R.id.btnDetectar).setOnClickListener {
-                escanearLibros()
+                Toast.makeText(this, "Botón presionado", Toast.LENGTH_SHORT).show()
+                escanearLibros()//aca está tirando error rotacion de camara -1 ---> VER QUE ONDA
+
             }
         } else {
             requestPermissions.launch(REQUIRED_PERMISSIONS)
-        }
-
-        findViewById<Button>(R.id.btnDetectar).setOnClickListener {
-            Toast.makeText(this, "Botón presionado", Toast.LENGTH_SHORT).show()
-            // Llamado a detectorDeLibros
         }
     }
 
@@ -49,12 +45,12 @@ class MainActivity : AppCompatActivity() {
                 it.setSurfaceProvider(previewView.surfaceProvider)
             }
 
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            val selectorDeCamara = CameraSelector.DEFAULT_BACK_CAMERA //camara de atrás por default
 
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview
+                    this, selectorDeCamara, preview
                 )
             } catch (exc: Exception) {
                 Log.e("CameraX", "Error al iniciar cámara", exc)
@@ -63,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    // Permisos de cámara
+    //============================CONFIGURACION DE PERMISOS DE CAMARA==============================================
     private val requestPermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permisos ->
@@ -87,13 +83,19 @@ class MainActivity : AppCompatActivity() {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
+    //============================FIN PERMISOS DE CAMARA==============================================
+
+    //============================DETECCION DE LIBROS=================================================
     private fun escanearLibros() {
-        // Se obtiene un frame de PreviewView como un bitmap
-        val previewView = findViewById<PreviewView>(R.id.camera_preview)
-        previewView.bitmap?.let { bitmap ->
+        val bitmap = previewView.bitmap
+        if (bitmap != null) {
             val boxes = detector.detectarLibros(bitmap)
-            Toast.makeText(this, "Libros detectados: ${boxes.size}", Toast.LENGTH_LONG).show()
-            // Aquí podrías dibujar las cajas si querés
+            Toast.makeText(this, "Libros detectados: ${boxes.size}", Toast.LENGTH_SHORT).show()
+            //dibujar cajas y OCR
+        } else {
+            Toast.makeText(this, "No se pudo capturar el frame ", Toast.LENGTH_SHORT).show()
         }
     }
+    //============================FIN DETECCION DE LIBROS==============================================
+
 }
