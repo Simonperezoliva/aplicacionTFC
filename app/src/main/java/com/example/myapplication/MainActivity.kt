@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
             findViewById<Button>(R.id.btnDetectar).setOnClickListener {
                 Toast.makeText(this, "Botón presionado", Toast.LENGTH_SHORT).show()
                 escanearLibros()//aca está tirando error rotacion de camara -1 ---> VER QUE ONDA
-
             }
         } else {
             requestPermissions.launch(REQUIRED_PERMISSIONS)
