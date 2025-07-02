@@ -31,10 +31,10 @@ class detectorDeLibros(context: Context) {
     fun detectarLibros(bitmap: Bitmap): List<RectF> {
         val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 640, 640, false)
         val input = preprocess(resizedBitmap)
-        val output = Array(1) { Array(8400) { FloatArray(6) } } // YOLOv8n output
-
+        val output = Array(1) { Array(84) { FloatArray(8400) } } // YOLOv8n output --->ACA ESTABA EL ERROR
+        //CREO que se solucionó el error de shape
+        //ver de pasar a dispositivo físico o leer una imagen para chequear que detecta bien
         interpreter.run(input, output)
-
         return postprocesar(output[0])
     }
 

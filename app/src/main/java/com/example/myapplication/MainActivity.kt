@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             iniciarCamara()
             findViewById<Button>(R.id.btnDetectar).setOnClickListener {
                 Toast.makeText(this, "Botón presionado", Toast.LENGTH_SHORT).show()
-                escanearLibros()//aca está tirando error rotacion de camara -1 ---> VER QUE ONDA
+                escanearLibros()
             }
         } else {
             requestPermissions.launch(REQUIRED_PERMISSIONS)
@@ -86,9 +86,11 @@ class MainActivity : AppCompatActivity() {
 
     //============================DETECCION DE LIBROS=================================================
     private fun escanearLibros() {
-        val bitmap = previewView.bitmap
-        if (bitmap != null) {
-            val boxes = detector.detectarLibros(bitmap)
+        val bitmap = previewView.bitmap //toma bien el previewView hasta acá
+        if (bitmap != null) { //entra correctamente al if ---> el bitmap tomado no está vacío
+            val boxes = detector.detectarLibros(bitmap) //ACA ESTÁ EL ERROR DE SHAPE ---> lo de abajo ya no ejecuta
+            Toast.makeText(this, "Hasta acá anda", Toast.LENGTH_SHORT).show()
+
             Toast.makeText(this, "Libros detectados: ${boxes.size}", Toast.LENGTH_SHORT).show()
             //dibujar cajas y OCR
         } else {
