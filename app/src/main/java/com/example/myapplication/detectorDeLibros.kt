@@ -11,10 +11,12 @@ import java.nio.channels.FileChannel
 
 class detectorDeLibros(context: Context) {
 
+    //===========================================CONFIGURACION DE DETECCION=================================================
     private val interpreter: Interpreter
     private val inputImageSize = Size(640, 640)
     private val threshold = 0.4f
     private val labels = listOf("book") // Clase 84
+    //===========================================FIN CONFIGURACION DE DETECCION=============================================
 
     init {
         val assetManager = context.assets
@@ -33,15 +35,15 @@ class detectorDeLibros(context: Context) {
         val input = preprocess(resizedBitmap)
         val output = Array(1) { Array(84) { FloatArray(8400) } } // YOLOv8n output --->ACA ESTABA EL ERROR
         //CREO que se solucionó el error de shape
-        //ver de pasar a dispositivo físico o leer una imagen para chequear que detecta bien
+        //pasar a dispositivo físico, leer videos y con webcam usb para chequear que detecta bien
         interpreter.run(input, output)
         return postprocesar(output[0])
     }
 
     private fun preprocess(bitmap: Bitmap): Array<Array<Array<FloatArray>>> {
-        val input = Array(1) { Array(640) { Array(640) { FloatArray(3) } } }
-        for (y in 0 until 640) {
-            for (x in 0 until 640) {
+        val input = Array(1) { Array(inputImageSize.width) { Array(inputImageSize.height) { FloatArray(3) } } }
+        for (y in 0 until inputImageSize.width) {
+            for (x in 0 until inputImageSize.height) {
                 val px = bitmap.getPixel(x, y)
                 input[0][y][x][0] = Color.red(px) / 255f
                 input[0][y][x][1] = Color.green(px) / 255f
@@ -57,6 +59,7 @@ class detectorDeLibros(context: Context) {
             val confidence = output[i][4]
             val classScore = output[i][5]
             if (confidence > threshold && classScore > 0.5f) {
+                //poner acá el control de libros (id=84)
                 val x = output[i][0]
                 val y = output[i][1]
                 val w = output[i][2]
