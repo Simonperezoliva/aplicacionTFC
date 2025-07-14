@@ -20,7 +20,7 @@ class detectorDeLibros(context: Context) {
 
     init {
         val assetManager = context.assets
-        val assetFileDescriptor = assetManager.openFd("yolo11n_float32.tflite")
+        val assetFileDescriptor = assetManager.openFd("yolov8n_float32.tflite")
         val fileInputStream = FileInputStream(assetFileDescriptor.fileDescriptor)
         val fileChannel = fileInputStream.channel
         val startOffset = assetFileDescriptor.startOffset

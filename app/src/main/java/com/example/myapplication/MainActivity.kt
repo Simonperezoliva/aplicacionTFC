@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.Manifest
+import android.graphics.RectF
 import android.widget.Button
 import android.widget.Toast
 import androidx.camera.core.Preview
@@ -21,17 +22,45 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val previewView = findViewById<PreviewView>(R.id.camera_preview)
+        val button = findViewById<Button>(R.id.btnDetectar)
+        val dibujarCajas = findViewById<OverlayView>(R.id.dibujarCajas)
+        detector = detectorDeLibros(this)
+
+        button.setOnClickListener {
+            val bitmap = previewView.bitmap
+            if (bitmap != null) {
+                val boxes = detector.detectarLibros(bitmap)
+
+                // Convertir coordenadas de modelo (640x640) a tamaño real de PreviewView
+                val reescaladoX = previewView.width / 640f
+                val reescaladoY = previewView.height / 640f
+                val cajasReescaladas = boxes.map { rect ->
+                    RectF(
+                        rect.left * reescaladoX,
+                        rect.top * reescaladoY,
+                        rect.right * reescaladoX,
+                        rect.bottom * reescaladoY
+                    )
+                }
+
+                dibujarCajas.setResults(cajasReescaladas)
+            }
+        }
+
+        /*
         detector = detectorDeLibros(this)
         previewView = findViewById(R.id.camera_preview)
         if (permisosOtorgados()) {
             iniciarCamara()
             findViewById<Button>(R.id.btnDetectar).setOnClickListener {
-                escanearLibros()
                 Toast.makeText(this, "Escaneando...", Toast.LENGTH_SHORT).show()
+                escanearLibros()
             }
         } else {
             requestPermissions.launch(REQUIRED_PERMISSIONS)
-        }
+        }*/
     }
 
     private fun iniciarCamara() {
