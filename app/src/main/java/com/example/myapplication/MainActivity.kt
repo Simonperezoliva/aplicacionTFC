@@ -23,33 +23,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val previewView = findViewById<PreviewView>(R.id.camera_preview)
-        val button = findViewById<Button>(R.id.btnDetectar)
-        val dibujarCajas = findViewById<OverlayView>(R.id.dibujarCajas)
-        detector = detectorDeLibros(this)
-
-        button.setOnClickListener {
-            val bitmap = previewView.bitmap
-            if (bitmap != null) {
-                val boxes = detector.detectarLibros(bitmap)
-
-                // Convertir coordenadas de modelo (640x640) a tamaño real de PreviewView
-                val reescaladoX = previewView.width / 640f
-                val reescaladoY = previewView.height / 640f
-                val cajasReescaladas = boxes.map { rect ->
-                    RectF(
-                        rect.left * reescaladoX,
-                        rect.top * reescaladoY,
-                        rect.right * reescaladoX,
-                        rect.bottom * reescaladoY
-                    )
-                }
-
-                dibujarCajas.setResults(cajasReescaladas)
-            }
-        }
-
-        /*
         detector = detectorDeLibros(this)
         previewView = findViewById(R.id.camera_preview)
         if (permisosOtorgados()) {
@@ -60,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             requestPermissions.launch(REQUIRED_PERMISSIONS)
-        }*/
+        }
     }
 
     private fun iniciarCamara() {
@@ -115,6 +88,26 @@ class MainActivity : AppCompatActivity() {
 
     //============================DETECCION DE LIBROS=================================================
     private fun escanearLibros() {
+        val dibujarCajas = findViewById<OverlayView>(R.id.dibujarCajas)
+
+        val bitmap = previewView.bitmap
+        if (bitmap != null) {
+            val boxes = detector.detectarLibros(bitmap)
+            val reescaladoX = previewView.width / 640f //conversion de 640 a tamanio del previewview
+            val reescaladoY = previewView.height / 640f
+            val cajasReescaladas = boxes.map { rect ->
+                RectF(
+                    rect.left * reescaladoX,
+                    rect.top * reescaladoY,
+                    rect.right * reescaladoX,
+                    rect.bottom * reescaladoY
+                )
+            }
+            dibujarCajas.setResults(cajasReescaladas)
+            Toast.makeText(this, "Libros detectados: ${cajasReescaladas.size}", Toast.LENGTH_SHORT).show()
+        }
+
+        /*
         val bitmap = previewView.bitmap
         if (bitmap != null) {
             val boxes = detector.detectarLibros(bitmap)
@@ -123,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Libros detectados: ${boxes.size}", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "No se pudo capturar el frame ", Toast.LENGTH_SHORT).show()
-        }
+        }*/
     }
     //============================FIN DETECCION DE LIBROS==============================================
 
