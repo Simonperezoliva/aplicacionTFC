@@ -89,9 +89,10 @@ class MainActivity : AppCompatActivity() {
     //============================DETECCION DE LIBROS=================================================
     private fun escanearLibros() {
         val dibujarCajas = findViewById<OverlayView>(R.id.dibujarCajas)
-
         val bitmap = previewView.bitmap
         if (bitmap != null) {
+            Log.d("YOLO", "Bitmap capturado: ${bitmap.width}x${bitmap.height}") //code para chequear que onda el modelo
+            //Bitmap capturado: 1080x1775 ---> ESO SALIÓ EN EL LOGCAT ---->VER DE AJUSTAR EL PREPROCESAMIENTO DE INPUT
             val boxes = detector.detectarLibros(bitmap)
             val reescaladoX = previewView.width / 640f //conversion de 640 a tamanio del previewview
             val reescaladoY = previewView.height / 640f
@@ -104,19 +105,10 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             dibujarCajas.setResults(cajasReescaladas)
-            Toast.makeText(this, "Libros detectados: ${cajasReescaladas.size}", Toast.LENGTH_SHORT).show()
-        }
-
-        /*
-        val bitmap = previewView.bitmap
-        if (bitmap != null) {
-            val boxes = detector.detectarLibros(bitmap)
-            //dibujar cajas y OCR
-            //REVISAR ESTO PARA VER SI ASÍ DETECTA ALGO LA APP
-            Toast.makeText(this, "Libros detectados: ${boxes.size}", Toast.LENGTH_SHORT).show()
-        } else {
+            Toast.makeText(this, "Libros detectados: ${cajasReescaladas.size}", Toast.LENGTH_LONG).show()
+        }else {
             Toast.makeText(this, "No se pudo capturar el frame ", Toast.LENGTH_SHORT).show()
-        }*/
+        }
     }
     //============================FIN DETECCION DE LIBROS==============================================
 

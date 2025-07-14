@@ -33,15 +33,13 @@ class detectorDeLibros(context: Context) {
     fun detectarLibros(bitmap: Bitmap): List<RectF> {
         val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 640, 640, false)
         val input = preprocess(resizedBitmap)
-        val output = Array(1) { Array(84) { FloatArray(8400) } } // YOLOv8n output --->ACA ESTABA EL ERROR
-        //CREO que se solucionó el error de shape
-        //pasar a dispositivo físico, leer videos y con webcam usb para chequear que detecta bien
+        val output = Array(1) { Array(84) { FloatArray(8400) } }
         interpreter.run(input, output)
         return postprocesar(output[0])
     }
 
     private fun preprocess(bitmap: Bitmap): Array<Array<Array<FloatArray>>> {
-        val input = Array(1) { Array(inputImageSize.width) { Array(inputImageSize.height) { FloatArray(3) } } }
+        val input = Array(1) { Array(inputImageSize.width) { Array(inputImageSize.height) { FloatArray(3) } } } //4dim
         for (y in 0 until inputImageSize.width) {
             for (x in 0 until inputImageSize.height) {
                 val px = bitmap.getPixel(x, y)
@@ -58,8 +56,8 @@ class detectorDeLibros(context: Context) {
         for (i in output.indices) {
             val confidence = output[i][4]
             val classScore = output[i][5]
+            //val classId = classScore.indexOf(maxClassScore)
             if (confidence > threshold && classScore > 0.5f) {
-                //poner acá el control de libros (id=84)
                 val x = output[i][0]
                 val y = output[i][1]
                 val w = output[i][2]
@@ -70,3 +68,11 @@ class detectorDeLibros(context: Context) {
         return boxes
     }
 }
+
+/*
+El modelo devuelto por Ultralytics tiene forma [1, 84, 8400], por lo tanto:
+
+output[0] → array con 84 elementos
+output[0][4] → array con 8400 scores de confianza
+output[0][4][i] → confianza de la detección i-ésima
+*/
