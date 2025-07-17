@@ -27,5 +27,4 @@ class OverlayView (context: Context, attrs: AttributeSet?) : View(context, attrs
             canvas.drawRect(box, boxPaint)
         }
     }
-
 }

@@ -16,14 +16,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var detector: detectorDeLibros
+    private lateinit var detector: DetectorDeLibros
     private lateinit var previewView: PreviewView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        detector = detectorDeLibros(this)
+        detector = DetectorDeLibros(this)
         previewView = findViewById(R.id.camera_preview)
         if (permisosOtorgados()) {
             iniciarCamara()
